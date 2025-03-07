@@ -56,7 +56,7 @@ app.post('/fruits', async (req, res) => {
     await Fruit.create(req.body);
     // redirect tells the client to navigate to 
     // a new URL path/another page
-    res.redirect('/fruits/new'); // <-- URL path
+    res.redirect('/fruits'); // <-- URL path
 });
 
 // index route for fruits - sends a page that lists
