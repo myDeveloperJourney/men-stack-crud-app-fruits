@@ -32,6 +32,8 @@ app.use(methodOverride('_method'));
 // method override reads the "_method" query param for 
 // DELETE or PUT requests
 app.use(morgan('dev'));
+// static asset middleware - used to sent static assets (CSS, Imgs and DOM manipulation JS) to the client 
+app.use(express.static('public'));
 
 // Root path/route "HomePage"
 app.get('/', async (req, res) => {
@@ -84,6 +86,30 @@ app.delete('/fruits/:fruitId', async (req, res) => {
     res.redirect('/fruits');
 });
 
+// edit route - used to send a page to the client with 
+// an edit form pre-filled out with fruit details
+// so the user can edit the fruit and submit the form
+app.get('/fruits/:fruitId/edit', async (req, res) => {
+    // 1. look up the fruit by it's id
+    const foundFruit = await Fruit.findById(req.params.fruitId);
+    // 2. respond with a "edit" template with an edit form
+    res.render('fruits/edit.ejs', { fruit: foundFruit });
+});
+
+
+// update route - used to capture edit form submissions
+// from the client and send updates to MongoDB
+app.put('/fruits/:fruitId', async (req, res) => {
+    if(req.body.isReadyToEat === 'on') {
+        req.body.isReadyToEat = true;
+    } else {
+        req.body.isReadyToEat = false;
+    }
+
+    await Fruit.findByIdAndUpdate(req.params.fruitId, req.body);
+
+    res.redirect(`/fruits/${req.params.fruitId}`);
+});
 
 
 app.listen(3000, () => {
