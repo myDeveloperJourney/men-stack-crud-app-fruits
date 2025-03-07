@@ -63,7 +63,14 @@ app.post('/fruits', async (req, res) => {
 // all fruits from the database
 app.get('/fruits', async (req, res) => {
     const allFruits = await Fruit.find({});
-    res.render('fruits/index.ejs', {fruits: allFruits});
+    res.render('fruits/index.ejs', { fruits: allFruits });
+});
+
+// show route - for sending a page with the details for
+// one particular fruit
+app.get('/fruits/:fruitId', async (req, res) => {
+    const foundFruit = await Fruit.findById(req.params.fruitId);
+    res.render('fruits/show.ejs', { fruit: foundFruit });
 });
 
 
